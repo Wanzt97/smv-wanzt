@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Wanzt Koffi — Funnel Builder & Strategist</title>
+<meta name="description" content="Je construis les systèmes de vente qui transforment ton audience en clients. Réserve un diagnostic gratuit." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+<script src="image-slot.js"></script>
+
+<style>
+  :root, [data-theme="paper"] {
+    /* Paper Warm — brief default */
+    --paper: #F6F5F1;
+    --paper-2: #EFEDE6;
+    --ink: #1A1A1A;
+    --ink-soft: #3A3A3A;
+    --gray-1: #E7E5DF;
+    --gray-2: #D9D6CE;
+    --gray-3: #9C988E;
+    --gray-4: #6F6C64;
+    --white: #FFFFFF;
+    --accent: #F7901D;
+    --accent-press: #E07F12;
+    --strong-fg: #FFFFFF;          /* text on stat--ink / row--secondary */
+    --strong-hover: #262626;       /* hover bg for the anchor surfaces */
+    --accent-fg: #FFFFFF;          /* text on the orange CTA (locked white) */
+    --muted-hover-bg: rgba(255,255,255,0.4);
+    --bg-grad-top: #FBFAF6;
+    --bg-grad-bot: #EFEDE6;
+  }
+
+  [data-theme="linear"] {
+    /* Linear — clean white & neutral grays */
+    --paper: #FFFFFF;
+    --paper-2: #F4F4F5;
+    --ink: #0A0A0A;
+    --ink-soft: #27272A;
+    --gray-1: #ECECEE;
+    --gray-2: #D4D4D8;
+    --gray-3: #A1A1AA;
+    --gray-4: #71717A;
+    --white: #FFFFFF;
+    --accent: #F7901D;
+    --accent-press: #E07F12;
+    --strong-fg: #FFFFFF;
+    --strong-hover: #1F1F22;
+    --accent-fg: #FFFFFF;
+    --muted-hover-bg: rgba(244,244,245,0.6);
+    --bg-grad-top: #FFFFFF;
+    --bg-grad-bot: #FAFAFA;
+  }
+
+  [data-theme="navy"] {
+    /* Funelio Navy — institutional */
+    --paper: #F8F4EC;
+    --paper-2: #EFE9DC;
+    --ink: #173F75;
+    --ink-soft: #2A4A7E;
+    --gray-1: #E2DCC9;
+    --gray-2: #CFC8B2;
+    --gray-3: #8E826C;
+    --gray-4: #6B5F4D;
+    --white: #FFFFFF;
+    --accent: #F7901D;
+    --accent-press: #E07F12;
+    --strong-fg: #F8F4EC;
+    --strong-hover: #1F4D8A;
+    --accent-fg: #FFFFFF;
+    --muted-hover-bg: rgba(255,255,255,0.45);
+    --bg-grad-top: #FBF8F1;
+    --bg-grad-bot: #EFE9DC;
+  }
+
+  [data-theme="ink"] {
+    /* Ink Noir — premium dark */
+    --paper: #0E1014;
+    --paper-2: #1A1D24;
+    --ink: #F2EFE8;
+    --ink-soft: #C9C6BF;
+    --gray-1: rgba(255,255,255,0.08);
+    --gray-2: rgba(255,255,255,0.16);
+    --gray-3: rgba(255,255,255,0.38);
+    --gray-4: rgba(255,255,255,0.55);
+    --white: #171A20;
+    --accent: #F7901D;
+    --accent-press: #E07F12;
+    --strong-fg: #0E1014;
+    --strong-hover: #E5E0D5;
+    --accent-fg: #FFFFFF;
+    --muted-hover-bg: rgba(255,255,255,0.04);
+    --bg-grad-top: #14171D;
+    --bg-grad-bot: #0B0D11;
+  }
+
+  :root {
+    /* Type */
+    --ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --editorial: "Instrument Serif", "Times New Roman", serif;
+
+    /* Radius */
+    --r-sm: 8px;
+    --r-md: 10px;
+    --r-lg: 12px;
+
+    /* Hard shadow for primary CTA — color tracks --ink so it flips per theme */
+    --hard: 0 3px 0 0 var(--ink);
+    --hard-hover: 0 5px 0 0 var(--ink);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--ui);
+    font-size: 15px;
+    line-height: 1.5;
+    min-height: 100dvh;
+    /* gentle paper-warm vignette */
+    background-image:
+      radial-gradient(1200px 800px at 50% -200px, var(--bg-grad-top) 0%, transparent 60%),
+      radial-gradient(900px 600px at 50% 110%, var(--bg-grad-bot) 0%, transparent 55%);
+    transition: background-color 240ms ease, color 240ms ease;
+    background-attachment: fixed;
+  }
+
+  /* Column */
+  .page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 56px 24px 80px;
+  }
+  @media (max-width: 480px) {
+    .page { padding: 32px 20px 56px; }
+  }
+
+  /* ---------- 1. Header ---------- */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+  .avatar {
+    position: relative;
+    flex: 0 0 auto;
+    width: 88px;
+    height: 88px;
+  }
+  .avatar image-slot {
+    width: 88px;
+    height: 88px;
+    border-radius: 999px;
+    /* subtle inner ring */
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+  /* Presence dot */
+  .avatar .presence {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    border: 2.5px solid var(--paper);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.12);
+  }
+  .id {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .id h1 {
+    margin: 0;
+    font-family: var(--ui);
+    font-size: 28px;
+    line-height: 1.05;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--ink);
+  }
+  .id .role {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    letter-spacing: -0.05px;
+  }
+  .id .founder {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--gray-4);
+    letter-spacing: -0.05px;
+  }
+
+  @media (max-width: 480px) {
+    .avatar, .avatar image-slot { width: 72px; height: 72px; }
+    .avatar .presence { width: 15px; height: 15px; border-width: 2px; }
+    .id h1 { font-size: 26px; }
+    .header { gap: 16px; }
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--gray-1);
+    margin: 24px 0 22px;
+  }
+
+  .tagline {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0;
+  }
+  .tagline > p { margin: 0; text-wrap: pretty; }
+
+  .tagline-lead {
+    font-family: var(--editorial);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+    font-size: 21px;
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+  .tagline-body {
+    font-family: var(--ui);
+    font-size: 14px;
+    line-height: 1.6;
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: -0.05px;
+  }
+  .tagline-kicker {
+    font-family: var(--editorial);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--ink);
+    font-size: 18px;
+    line-height: 1.35;
+    letter-spacing: 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--gray-1);
+    margin-top: 2px;
+  }
+  @media (max-width: 480px) {
+    .tagline-lead   { font-size: 19px; line-height: 1.45; }
+    .tagline-body   { font-size: 13.5px; }
+    .tagline-kicker { font-size: 17px; }
+  }
+
+  /* ---------- 1b. Skills (stack tools) ---------- */
+  .skills {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .skills-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--gray-4);
+  }
+  .skills-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px 5px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--gray-2);
+    background: var(--white);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.05px;
+    white-space: nowrap;
+    transition: border-color 140ms ease, background 140ms ease, transform 140ms ease;
+  }
+  .chip::before {
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--accent);
+    opacity: 0.55;
+    flex: 0 0 5px;
+  }
+  .chip:hover {
+    border-color: var(--gray-3);
+    transform: translateY(-1px);
+  }
+
+  /* ---------- 2. Stats ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 32px;
+  }
+  .stat {
+    border-radius: var(--r-md);
+    padding: 20px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    min-height: 108px;
+    justify-content: center;
+  }
+  .stat .num {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -1px;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+  .stat .label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    line-height: 1.3;
+  }
+  .stat--ink {
+    background: var(--ink);
+    color: var(--strong-fg);
+  }
+  .stat--ink .label { color: color-mix(in oklab, var(--strong-fg) 62%, transparent); }
+  .stat--paper {
+    background: var(--paper);
+    color: var(--ink);
+    border: 1.5px solid var(--gray-1);
+  }
+  .stat--paper .label { color: var(--gray-4); }
+
+  /* ---------- 3. Actions / menu rows ---------- */
+  .actions {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .row {
+    --row-bg: var(--white);
+    --row-fg: var(--ink);
+    --row-sub: var(--gray-4);
+    --row-border: var(--gray-1);
+    --row-icon-bg: var(--paper-2);
+    --row-icon-fg: var(--ink);
+    --row-chev: var(--gray-3);
+
+    position: relative;
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px 12px 12px;
+    background: var(--row-bg);
+    color: var(--row-fg);
+    border-radius: var(--r-lg);
+    border: 1.5px solid var(--row-border);
+    text-decoration: none;
+    transition: transform 160ms cubic-bezier(.22,1,.36,1),
+                box-shadow 160ms cubic-bezier(.22,1,.36,1),
+                background 160ms ease, border-color 160ms ease;
+    min-height: 64px;
+  }
+  .row:hover { transform: translateY(-1px); }
+  .row:active { transform: translateY(0); }
+
+  .row-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--r-sm);
+    background: var(--row-icon-bg);
+    color: var(--row-icon-fg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 40px;
+  }
+  .row-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .row-body {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .row-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.1px;
+    color: var(--row-fg);
+  }
+  .row-sub {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--row-sub);
+    line-height: 1.35;
+    letter-spacing: -0.05px;
+  }
+
+  .row-chev {
+    color: var(--row-chev);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 160ms cubic-bezier(.22,1,.36,1);
+    margin-right: 2px;
+  }
+  .row-chev svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .row:hover .row-chev { transform: translateX(2px); }
+
+  /* Primary — orange + hard shadow */
+  .row--primary {
+    --row-bg: var(--accent);
+    --row-fg: var(--accent-fg);
+    --row-sub: rgba(255,255,255,0.85);
+    --row-border: var(--ink);
+    --row-icon-bg: rgba(255,255,255,0.18);
+    --row-icon-fg: var(--accent-fg);
+    --row-chev: rgba(255,255,255,0.9);
+    border-width: 1.5px;
+    box-shadow: var(--hard);
+  }
+  .row--primary:hover {
+    background: var(--accent);
+    box-shadow: var(--hard-hover);
+    transform: translateY(-2px);
+  }
+  .row--primary:active {
+    box-shadow: 0 1px 0 0 var(--ink);
+    transform: translateY(1px);
+    background: var(--accent-press);
+  }
+
+  /* Secondary — ink anchor */
+  .row--secondary {
+    --row-bg: var(--ink);
+    --row-fg: var(--strong-fg);
+    --row-sub: color-mix(in oklab, var(--strong-fg) 65%, transparent);
+    --row-border: var(--ink);
+    --row-icon-bg: color-mix(in oklab, var(--strong-fg) 10%, transparent);
+    --row-icon-fg: var(--strong-fg);
+    --row-chev: color-mix(in oklab, var(--strong-fg) 75%, transparent);
+  }
+  .row--secondary:hover { background: var(--strong-hover); border-color: var(--strong-hover); }
+
+  /* Default — white card */
+  .row--default {
+    --row-bg: var(--white);
+    --row-fg: var(--ink);
+    --row-sub: var(--gray-4);
+    --row-border: var(--gray-1);
+    --row-icon-bg: var(--paper-2);
+    --row-icon-fg: var(--ink);
+    --row-chev: var(--gray-3);
+  }
+  .row--default:hover { border-color: var(--gray-2); }
+
+  /* Muted — transparent dashed */
+  .row--muted {
+    --row-bg: transparent;
+    --row-fg: var(--ink-soft);
+    --row-sub: var(--gray-4);
+    --row-border: var(--gray-2);
+    --row-icon-bg: rgba(0,0,0,0.04);
+    --row-icon-fg: var(--ink-soft);
+    --row-chev: var(--gray-3);
+    border-style: dashed;
+  }
+  .row--muted:hover {
+    background: var(--muted-hover-bg);
+    border-color: var(--gray-3);
+  }
+
+  /* Focus */
+  .row:focus-visible,
+  .pill:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--paper),
+      0 0 0 4px var(--accent);
+  }
+  .row--primary:focus-visible {
+    box-shadow:
+      var(--hard),
+      0 0 0 2px var(--paper),
+      0 0 0 4px var(--accent);
+  }
+
+  /* ---------- 4. Testimonials ---------- */
+  .testis {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 560px) {
+    .testis { grid-template-columns: 1fr; }
+  }
+
+  .testi {
+    background: var(--white);
+    border: 1.5px solid var(--gray-1);
+    border-radius: var(--r-md);
+    padding: 16px 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .testi .quotemark {
+    font-family: var(--editorial);
+    font-style: italic;
+    font-size: 28px;
+    line-height: 0.7;
+    color: var(--accent);
+    height: 14px;
+    letter-spacing: -0.05em;
+  }
+  .testi .quote {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--ink);
+    margin: 0;
+    letter-spacing: -0.05px;
+    flex: 1;
+  }
+  .testi .who {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2px;
+  }
+  .testi .mini {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: var(--paper-2);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0;
+    flex: 0 0 26px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+  .testi .mini image-slot {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    display: block;
+  }
+  .testi .who-text {
+    font-size: 11px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .testi .who-text .role-tag {
+    color: var(--gray-4);
+    font-weight: 400;
+  }
+
+  /* ---------- 5. Footer ---------- */
+  .footer {
+    margin-top: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--gray-2);
+    background: transparent;
+    color: var(--gray-4);
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: -0.05px;
+    transition: color 140ms ease, border-color 140ms ease, background 140ms ease, transform 140ms ease;
+  }
+  .pill svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .pill:hover {
+    color: var(--ink);
+    border-color: var(--gray-3);
+    transform: translateY(-1px);
+  }
+
+  .copy {
+    font-size: 11px;
+    color: var(--gray-4);
+    letter-spacing: -0.05px;
+    white-space: nowrap;
+  }
+
+  /* selection */
+  ::selection { background: var(--accent); color: var(--accent-fg); }
+
+  /* Smooth theme transitions on coloured surfaces */
+  .row, .stat, .testi, .pill, .divider, .avatar .presence,
+  .stat .num, .stat .label, .row-icon, .row-title, .row-sub,
+  .testi .quote, .testi .mini, .testi .who-text, .id h1, .id .role, .id .founder,
+  .tagline, .copy {
+    transition: background-color 240ms ease, color 240ms ease,
+                border-color 240ms ease, box-shadow 240ms ease;
+  }
+
+  /* ============= TWEAKS PANEL ============= */
+  .tweaks {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9999;
+    width: 308px;
+    background: var(--white);
+    color: var(--ink);
+    border: 1px solid var(--gray-1);
+    border-radius: 14px;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,0.06),
+      0 24px 48px -12px rgba(0,0,0,0.22);
+    font-family: var(--ui);
+    overflow: hidden;
+  }
+  .tweaks[hidden] { display: none; }
+  .tweaks-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 14px 10px;
+    border-bottom: 1px solid var(--gray-1);
+  }
+  .tweaks-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .tweaks-title::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: var(--accent);
+  }
+  .tweaks-close {
+    width: 24px; height: 24px;
+    border-radius: 6px;
+    border: 0;
+    background: transparent;
+    color: var(--gray-4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 140ms ease, color 140ms ease;
+  }
+  .tweaks-close:hover { background: var(--paper-2); color: var(--ink); }
+  .tweaks-close svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; }
+
+  .tweaks-section {
+    padding: 12px 14px 14px;
+  }
+  .tweaks-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-4);
+    margin-bottom: 10px;
+  }
+
+  .theme-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .theme-swatch {
+    --sw-border: var(--gray-1);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    background: transparent;
+    border: 1.5px solid var(--sw-border);
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    text-align: left;
+    font-family: var(--ui);
+    transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+    position: relative;
+  }
+  .theme-swatch:hover { transform: translateY(-1px); border-color: var(--gray-3); }
+  .theme-swatch[aria-pressed="true"] {
+    --sw-border: var(--ink);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .theme-swatch:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--paper), 0 0 0 4px var(--accent);
+  }
+  .swatch-preview {
+    height: 56px;
+    position: relative;
+    overflow: hidden;
+    display: block;
+  }
+  .swatch-row {
+    position: absolute;
+    left: 8px; right: 8px; top: 8px;
+    height: 14px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+  }
+  .swatch-anchor {
+    position: absolute;
+    left: 8px; bottom: 8px;
+    width: 22px; height: 22px;
+    border-radius: 5px;
+  }
+  .swatch-accent {
+    position: absolute;
+    right: 10px; bottom: 10px;
+    width: 18px; height: 18px;
+    border-radius: 5px;
+  }
+  .swatch-check {
+    position: absolute;
+    top: 6px; right: 6px;
+    width: 16px; height: 16px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .theme-swatch[aria-pressed="true"] .swatch-check { display: flex; }
+  .swatch-check svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+  .swatch-meta {
+    padding: 8px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    background: var(--white);
+    border-top: 1px solid var(--gray-1);
+  }
+  .swatch-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -0.1px;
+  }
+  .swatch-sub {
+    font-size: 10.5px;
+    font-weight: 400;
+    color: var(--gray-4);
+    letter-spacing: -0.05px;
+  }
+
+  /* In dark theme, force tweak panel to a light-on-dark elev look */
+  [data-theme="ink"] .tweaks {
+    background: #14171D;
+    border-color: rgba(255,255,255,0.08);
+  }
+  [data-theme="ink"] .tweaks-head { border-color: rgba(255,255,255,0.08); }
+  [data-theme="ink"] .swatch-meta { background: #14171D; border-color: rgba(255,255,255,0.08); }
+
+  @media (max-width: 480px) {
+    .tweaks { right: 12px; bottom: 12px; left: 12px; width: auto; }
+  }
+</style>
+</head>
+<body>
+  <main class="page" data-screen-label="Wanzt link-in-bio">
+
+    <!-- 1. HEADER -->
+    <section class="header" aria-label="Identité">
+      <div class="avatar">
+        <image-slot
+          id="avatar"
+          shape="circle"
+          src="assets/wanzt-portrait.png"
+          placeholder="Photo de profil"
+        ></image-slot>
+        <span class="presence" aria-hidden="true"></span>
+      </div>
+      <div class="id">
+        <h1>Wanzt KOFFI</h1>
+        <div class="role">Funnel Builder &amp; AI Automation Strategist</div>
+        <div class="founder">Fondateur de Funelio</div>
+      </div>
+    </section>
+
+    <div class="divider" role="separator" aria-hidden="true"></div>
+
+    <div class="tagline">
+      <p class="tagline-lead">«&nbsp;Je construis des systèmes de vente entièrement automatisés pour les infopreneurs et coachs qui veulent scaler sans recruter une équipe technique.&nbsp;»</p>
+      <p class="tagline-body">Fondateur de Funelio, je combine funnel building, copywriting de conversion et automatisation no-code — pour que chaque lead soit capturé, nurturé et converti automatiquement.</p>
+      <p class="tagline-kicker">Un bon funnel ne dort jamais.<br>Le tien non plus.</p>
+    </div>
+
+    <!-- 1b. SKILLS / STACK -->
+    <section class="skills" aria-label="Compétences &amp; outils">
+      <div class="skills-label">Stack &amp; compétences</div>
+      <div class="skills-list">
+        <span class="chip">n8n</span>
+        <span class="chip">Make</span>
+        <span class="chip">Système.io</span>
+        <span class="chip">Tinypages</span>
+        <span class="chip">Intégrations API</span>
+        <span class="chip">Automatisation no-code</span>
+      </div>
+    </section>
+
+    <!-- 2. STATS -->
+    <section class="stats" aria-label="Chiffres clés">
+      <div class="stat stat--ink">
+        <div class="num">42</div>
+        <div class="label">Funnels livrés</div>
+      </div>
+      <div class="stat stat--paper">
+        <div class="num">30+</div>
+        <div class="label">Clients</div>
+      </div>
+      <div class="stat stat--paper">
+        <div class="num">2024</div>
+        <div class="label">Depuis</div>
+      </div>
+    </section>
+
+    <!-- 3. ACTIONS -->
+    <nav class="actions" aria-label="Actions principales">
+
+      <a href="https://cal.com/wanzt-koffi-xehhgm/diagnostic-de-30-minutes" target="_blank" rel="noopener noreferrer" class="row row--primary">
+        <span class="row-icon" aria-hidden="true">
+          <!-- calendar -->
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/></svg>
+        </span>
+        <span class="row-body">
+          <span class="row-title">Réserver un diagnostic gratuit</span>
+          <span class="row-sub">30&nbsp;min · visio · sans engagement</span>
+        </span>
+        <span class="row-chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <a href="#offres" class="row row--secondary">
+        <span class="row-icon" aria-hidden="true">
+          <!-- rocket -->
+          <svg viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09Z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z"/><path d="M9 12H5s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v4s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg>
+        </span>
+        <span class="row-body">
+          <span class="row-title">Voir les offres Funelio</span>
+          <span class="row-sub">2 packs · à partir de  490 €</span>
+        </span>
+        <span class="row-chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <a href="#portfolio" class="row row--default">
+        <span class="row-icon" aria-hidden="true">
+          <!-- folder -->
+          <svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2.5h8a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+        </span>
+        <span class="row-body">
+          <span class="row-title">Voir le portfolio</span>
+          <span class="row-sub">12 cas clients récents</span>
+        </span>
+        <span class="row-chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+
+      <a href="https://www.youtube.com/@DigitalBlack-tr7up" target="_blank" rel="noopener noreferrer" class="row row--muted">
+        <span class="row-icon" aria-hidden="true">
+          <!-- play-circle -->
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.25"/><path d="M10 8.5l6 3.5-6 3.5V8.5Z"/></svg>
+        </span>
+        <span class="row-body">
+          <span class="row-title">Suivre Digital Black sur YouTube</span>
+          <span class="row-sub">2 vidéos par semaine</span>
+        </span>
+        <span class="row-chev" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </span>
+      </a>
+    </nav>
+
+    <!-- 4. TESTIMONIALS -->
+    <section class="testis" aria-label="Témoignages">
+      <article class="testi">
+        <div class="quotemark" aria-hidden="true">“</div>
+        <p class="quote">«&nbsp;+240&nbsp;% de conversions en 6 semaines.&nbsp;»</p>
+        <div class="who">
+          <div class="mini">
+            <image-slot id="testi-mk" shape="circle" src="assets/avatar-marie.png" placeholder="MK"></image-slot>
+          </div>
+          <div class="who-text">Marie K. <span class="role-tag">· Coach Business</span></div>
+        </div>
+      </article>
+
+      <article class="testi">
+        <div class="quotemark" aria-hidden="true">“</div>
+        <p class="quote">«&nbsp;ROI ×3 en 2&nbsp;mois, je recommande.&nbsp;»</p>
+        <div class="who">
+          <div class="mini">
+            <image-slot id="testi-tl" shape="circle" src="assets/avatar-thomas.png" placeholder="TL"></image-slot>
+          </div>
+          <div class="who-text">Thomas L. <span class="role-tag">· Formateur</span></div>
+        </div>
+      </article>
+    </section>
+
+    <!-- 5. FOOTER -->
+    <footer class="footer">
+      <div class="pills">
+        <a class="pill" href="#ig" aria-label="Instagram">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" stroke="none"/></svg>
+          Instagram
+        </a>
+        <a class="pill" href="https://www.youtube.com/@DigitalBlack-tr7up" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <svg viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5"/><path d="M10.5 9.5l4.5 2.5-4.5 2.5V9.5Z"/></svg>
+          YouTube
+        </a>
+        <a class="pill" href="#li" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7"/><path d="M8 7v.01"/><path d="M12 17v-4a2 2 0 0 1 4 0v4"/><path d="M12 10v7"/></svg>
+          LinkedIn
+        </a>
+      </div>
+      <div class="copy">© Wanzt&nbsp;Koffi · Funelio&nbsp;2026</div>
+    </footer>
+
+  </main>
+
+  <!-- TWEAKS PANEL (shown when the toolbar's Tweaks toggle is on) -->
+  <aside class="tweaks" id="tweaks" role="dialog" aria-label="Tweaks" hidden>
+    <div class="tweaks-head">
+      <div class="tweaks-title">Tweaks</div>
+      <button class="tweaks-close" id="tweaksClose" type="button" aria-label="Fermer">
+        <svg viewBox="0 0 24 24"><path d="M6 6l12 12"/><path d="M18 6l-12 12"/></svg>
+      </button>
+    </div>
+    <div class="tweaks-section">
+      <div class="tweaks-section-label">Thème</div>
+      <div class="theme-grid" id="themeGrid"></div>
+    </div>
+  </aside>
+
+  <script>
+    // ----- Tweakable defaults (persisted to disk by the host) -----
+    const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+      "theme": "ink"
+    }/*EDITMODE-END*/;
+
+    const THEMES = [
+      { id: 'paper',  name: 'Paper Warm',   sub: 'Brief default',  bg: '#F6F5F1', card: '#FFFFFF', anchor: '#1A1A1A', accent: '#F7901D' },
+      { id: 'linear', name: 'Linear',       sub: 'Clean & neutral', bg: '#FFFFFF', card: '#FAFAFA', anchor: '#0A0A0A', accent: '#F7901D' },
+      { id: 'navy',   name: 'Funelio Navy', sub: 'Institutional',   bg: '#F8F4EC', card: '#FFFFFF', anchor: '#173F75', accent: '#F7901D' },
+      { id: 'ink',    name: 'Ink Noir',     sub: 'Premium dark',    bg: '#0E1014', card: '#171A20', anchor: '#F2EFE8', accent: '#F7901D' },
+    ];
+
+    function applyTheme(id) {
+      if (!THEMES.find(t => t.id === id)) id = 'paper';
+      document.documentElement.setAttribute('data-theme', id);
+      // sync swatch pressed state
+      document.querySelectorAll('.theme-swatch').forEach(b => {
+        b.setAttribute('aria-pressed', b.dataset.themeSet === id ? 'true' : 'false');
+      });
+      // best-effort local persistence so the choice survives a hard refresh
+      try { localStorage.setItem('wanzt.theme', id); } catch (e) {}
+      // persist to disk via host
+      try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { theme: id } }, '*'); } catch (e) {}
+    }
+
+    // Determine initial theme: localStorage > TWEAK_DEFAULTS.theme > 'paper'
+    let initialTheme = TWEAK_DEFAULTS.theme || 'paper';
+    try {
+      const stored = localStorage.getItem('wanzt.theme');
+      if (stored) initialTheme = stored;
+    } catch (e) {}
+    document.documentElement.setAttribute('data-theme', initialTheme);
+
+    // ----- Build the tweaks panel -----
+    const panel = document.getElementById('tweaks');
+    const grid  = document.getElementById('themeGrid');
+
+    THEMES.forEach(t => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'theme-swatch';
+      btn.dataset.themeSet = t.id;
+      btn.setAttribute('aria-pressed', initialTheme === t.id ? 'true' : 'false');
+      btn.setAttribute('aria-label', t.name);
+      btn.innerHTML = `
+        <span class="swatch-preview" style="background:${t.bg}">
+          <span class="swatch-row" style="background:${t.card}"></span>
+          <span class="swatch-anchor" style="background:${t.anchor}"></span>
+          <span class="swatch-accent" style="background:${t.accent}"></span>
+          <span class="swatch-check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-11"/></svg></span>
+        </span>
+        <span class="swatch-meta">
+          <span class="swatch-name">${t.name}</span>
+          <span class="swatch-sub">${t.sub}</span>
+        </span>
+      `;
+      btn.addEventListener('click', () => applyTheme(t.id));
+      grid.appendChild(btn);
+    });
+
+    // ----- Tweaks protocol with the host -----
+    window.addEventListener('message', (e) => {
+      const d = e.data;
+      if (!d || typeof d !== 'object') return;
+      if (d.type === '__activate_edit_mode')   panel.hidden = false;
+      if (d.type === '__deactivate_edit_mode') panel.hidden = true;
+    });
+
+    document.getElementById('tweaksClose').addEventListener('click', () => {
+      panel.hidden = true;
+      try { window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*'); } catch (e) {}
+    });
+
+    // Announce availability AFTER the listener is wired up
+    try { window.parent.postMessage({ type: '__edit_mode_available' }, '*'); } catch (e) {}
+
+    // ----- Avatar empty-state polish -----
+    (function styleAvatarEmpty(){
+      const wrap = document.querySelector('.avatar');
+      if (!wrap) return;
+      const slot = wrap.querySelector('image-slot');
+      if (!slot) return;
+      slot.style.background = 'linear-gradient(135deg, #1A1A1A 0%, #2a2a2a 100%)';
+      slot.style.color = '#F6F5F1';
+    })();
+  </script>
+</body>
+</html>
+
+<style id="__om-edit-overrides">
+.page >:is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) >:is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) >:is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) { color: rgb(247, 144, 30) !important }
+.page >:is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) >:is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) >:is(h1,h2,h3,h4,h5,h6,p,li,dt,dd,blockquote,figcaption,label,span,a,em,strong,small,td,th,caption) { color: rgb(242, 239, 232) !important }
+</style>

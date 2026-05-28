@@ -1,0 +1,96 @@
+name: Deploy wanztkoffi.com
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy & update Traefik
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: 82.112.241.252
+          username: root
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+
+            # 1. Trigger Coolify deployment
+            QUEUE_ID=$(docker exec coolify php artisan tinker --execute="
+              use App\Models\ApplicationDeploymentQueue;
+              use App\Models\Application;
+              use App\Models\Server;
+              use App\Jobs\ApplicationDeploymentJob;
+              \$app = Application::where('uuid', 'ghlwqk1jgh3z7fr6au52ltcr')->first();
+              \$server = Server::find(0);
+              \$q = ApplicationDeploymentQueue::create([
+                  'application_id' => \$app->id,
+                  'application_name' => \$app->name,
+                  'server_id' => \$server->id,
+                  'server_name' => \$server->name,
+                  'environment_name' => 'production',
+                  'deployment_uuid' => \Illuminate\Support\Str::random(32),
+                  'status' => 'queued',
+                  'commit' => 'HEAD',
+                  'force_rebuild' => false,
+                  'pull_request_id' => 0,
+              ]);
+              ApplicationDeploymentJob::dispatch(\$q->id)->onQueue('high');
+              echo \$q->id;
+            " 2>&1 | grep -E '^[0-9]+$')
+
+            echo "Deployment queued: job #$QUEUE_ID"
+
+            # 2. Wait for deployment to finish (max 3 min)
+            for i in $(seq 1 60); do
+              STATUS=$(docker exec coolify-db psql -U coolify coolify -t -c \
+                "SELECT status FROM application_deployment_queues WHERE id = $QUEUE_ID;" \
+                2>/dev/null | tr -d ' \n')
+              echo "[$i] Status: $STATUS"
+              if [ "$STATUS" = "finished" ]; then break; fi
+              if [ "$STATUS" = "failed" ]; then echo "Deployment FAILED"; exit 1; fi
+              sleep 3
+            done
+
+            # 3. Get new container IP and update Traefik
+            NEW_IP=$(docker ps -q --filter name=ghlwqk1 | xargs docker inspect 2>/dev/null \
+              | python3 -c "
+            import json,sys
+            cs=json.load(sys.stdin)
+            ips=[c['NetworkSettings']['Networks']['coolify']['IPAddress'] for c in cs if c['State']['Running']]
+            print(ips[-1]) if ips else print('')
+            ")
+
+            if [ -z "$NEW_IP" ]; then
+              echo "Could not find wanztkoffi container IP"
+              exit 1
+            fi
+
+            echo "New container IP: $NEW_IP"
+
+            # Update Traefik dynamic.yml with new IP for wanztkoffi
+            python3 - <<PYEOF
+            import re
+            with open('/root/stack/traefik/dynamic.yml', 'r') as f:
+                content = f.read()
+            lines = content.split('\n')
+            in_wanztkoffi = False
+            result = []
+            for line in lines:
+                if 'wanztkoffi:' in line and 'loadBalancer' not in line and 'router' not in line.lower():
+                    in_wanztkoffi = True
+                if in_wanztkoffi and '- url:' in line and '10.0.1.' in line:
+                    old_ip = re.search(r'10\.0\.1\.\d+', line)
+                    if old_ip and old_ip.group() != '$NEW_IP':
+                        line = line.replace(old_ip.group(), '$NEW_IP')
+                        print(f'Updated Traefik wanztkoffi: {old_ip.group()} -> $NEW_IP')
+                        in_wanztkoffi = False
+                result.append(line)
+            with open('/root/stack/traefik/dynamic.yml', 'w') as f:
+                f.write('\n'.join(result))
+            PYEOF
+
+            echo "Traefik updated. Deployment complete."
